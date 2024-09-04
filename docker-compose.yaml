@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   neo4j:
     build: ./neo4j
@@ -7,7 +5,7 @@ services:
       - "7474:7474"
       - "7687:7687"
     environment:
-      NEO4J_AUTH: "neo4j/your_password"
+      NEO4J_AUTH: "neo4j/12345678"
       NEO4J_apoc_export_file_enabled: "true"
       NEO4J_apoc_import_file_enabled: "true"
       NEO4J_apoc_import_file_use__neo4j__config: "true"
