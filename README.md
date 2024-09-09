@@ -10,5 +10,9 @@ What makes a GraphRAG work?
             2. How are you chunking + overlapping the document?
                 - In order to not use up all the tokens, it's necessary for you to chunk the text up so the LLM can provide you with the node schemas. However by chunking the document, you expose the GraphRAG to potential issues such as Ambiguiation where 2 nodes are created off of the same Concept/Entity. Ways to solve this ambiguity includes a second pass of the documents by an LLM, larger chunks, LLM with larger parameters, etc.
             3. LLM Restrictions
+Shortcomings of GraphRAG approach
+    - Query-Focused Summarization
+        When asked a "global" question such as "What are the main themes/ideas in the dataset?", the GraphRAG approach would break down as it is not capable of querying the entire graphset. Every other RAG approach also fails to handle such as task. Although there are ways to remedy this shortfall, it is good to keep in mind that a general querying service is not what RAG and GraphRAG are meant to handle. 
+    - 
 Remedies to the GraphRAG deficiencies
     There are some proposed ways to remedy the defects that GraphRAG presents. The most notable one being a hybrid search combining both RAG and GraphRAG methodologies. By either starting off with a Vector DB or a Graph DB and extending to the other, a multi-faceted approach to RAG could be achieved with varying performance. The most common combination of HybridRAG would be Vector + Graphs. 
