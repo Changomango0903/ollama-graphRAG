@@ -30,22 +30,23 @@ load_dotenv(override=True)
 #                 secondfile.write(line)
 #             secondfile.write('\n')
 graph = Neo4jGraph()
+llm = ChatOllama(model="llama3.1", temperature=0)
 
-loader = TextLoader(file_path="./dummytext.txt")
-docs = loader.load()
+def load_text(filepath, size, overlap):
+    loader = TextLoader(file_path=filepath)
+    docs = loader.load()
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=size, chunk_overlap=overlap)
+    return text_splitter.split_documents(documents=docs)
 
-text_splitter = RecursiveCharacterTextSplitter(chunk_size=250, chunk_overlap=48)
-documents = text_splitter.split_documents(documents=docs)
+def documents_to_graphs(llm, documents, graph):
+    llm_transformer = LLMGraphTransformer(llm=llm)
+    graph_documents = llm_transformer.convert_to_graph_documents(documents)
+    graph.add_graph_documents(
+        graph_documents,
+        baseEntityLabel=True,
+        include_source=True
+    )
 
-# llm = ChatOllama(model="llama3.1", temperature=0)
-# llm_transformer = LLMGraphTransformer(llm=llm)
-
-# graph_documents = llm_transformer.convert_to_graph_documents(documents)
-# graph.add_graph_documents(
-#     graph_documents,
-#     baseEntityLabel=True,
-#     include_source=True
-# )
 def showGraph():
     driver = GraphDatabase.driver(
         uri = os.environ["NEO4J_URI"],
@@ -56,14 +57,16 @@ def showGraph():
     widget.node_label_mapping = 'id'
     return widget
 
-vector_index = Neo4jVector.from_existing_graph(
-    OllamaEmbeddings(model='llama3.1:8b'),
-    search_type="hybrid",
-    node_label="Document",
-    text_node_properties=["text"],
-    embedding_node_property="embedding"
-)
-vector_retriever = vector_index.as_retriever()
+
+def existing_graph_to_vector():
+    vector_index = Neo4jVector.from_existing_graph(
+        OllamaEmbeddings(model='llama3.1:8b'),
+        search_type="hybrid",
+        node_label="Document",
+        text_node_properties=["text"],
+        embedding_node_property="embedding"
+    )
+    return vector_index.as_retriever()
 
 class Entities(BaseModel):
     """Identifying information about entities."""
