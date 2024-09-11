@@ -68,7 +68,7 @@ def process_file(fileobj):
     #File processing here
     loader = TextLoader(file_path = path)
     docs = loader.load()
-    text_splitter = RecursiveCharacterTextSplitter(separators = [".", "/n"], chunk_size=300, chunk_overlap=48)
+    text_splitter = RecursiveCharacterTextSplitter(separators = ["\n\n", "\n"], chunk_size=250, chunk_overlap=96)
     documents = text_splitter.split_documents(documents=docs)
     GRAPH_DOCUMENTS = llm_transformer.convert_to_graph_documents(documents)
     print(GRAPH_DOCUMENTS[0])
@@ -84,6 +84,7 @@ def process_file(fileobj):
         text_node_properties=["text"],
         embedding_node_property="embedding"
     )
+    global VECTOR_RETRIEVER
     VECTOR_RETRIEVER = vector_index.as_retriever()
 
 def generate_full_text_query(input: str) -> str:
