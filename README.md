@@ -24,3 +24,12 @@ Shortcomings of GraphRAG approach
     - 
 Remedies to the GraphRAG deficiencies
     There are some proposed ways to remedy the defects that GraphRAG presents. The most notable one being a hybrid search combining both RAG and GraphRAG methodologies. By either starting off with a Vector DB or a Graph DB and extending to the other, a multi-faceted approach to RAG could be achieved with varying performance. The most common combination of HybridRAG would be Vector + Graphs. 
+
+
+
+
+
+
+
+USAGE INSTRUCTIONS:
+    use [docker compose up] in the directory to start the neo4j database. Then, run the file chatinterface.py to start the gradio chatbot. Once Gradio is up and running, insert the .txt document that you want turned into GraphRAG. After the graph is constructed on Neo4j, you can start prompting. Any erroneous output will be stored under ./log/LLMGraphTransformer.log and any text documents will be stored in ./docs/.. Neo4j DB can be configured in docker-compose.yaml including the port and password. Make sure that Llama3.1 is installed (8b preferred but any other is fine too). Make sure if using parameters that are higher than 8b to change appropriately in chatinterface.py
